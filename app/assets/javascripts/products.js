@@ -1,16 +1,33 @@
+function toggleForm() {
+  showForm = !showForm;
+  $('#product-form').remove();
+  $('#products-list').toggle();
+
+  if (showForm) {
+    $.ajax({
+      url: '/product_form',
+      method: 'GET'
+    }).done( function(html) {
+      $('#toggle').after(html)
+    });
+  }
+}
+
 $(document).ready( function() {
-  $('.product-item').on('click', function() {
-    currentProduct.id = this.dataset.id
+
+$('.product-item').on('click', function () {
+
     $.ajax({
       url: "http://json-server.devpointlabs.com/api/v1/products",
       method: 'GET',
       dataType: 'JSON'
     }).done( function(products) {
-      var list = $('.products-list');
-      list.empty();
-      var li = '<a href="localhost:3000/products' + product.id + '"><li class="list-item" id="product" data-product-id="' + product.id + '">' + product.name + '-' + product.price+ ': ' + product.description +'</li></a>'
-       list.append(li)
-
-    });
+      var list = $('#products-list');
+      list.empty()
+      products.forEach( function(product) {
+        var li = '<li data-product-id="' + product.id + '">' + product.name + '</li>'
+         list.append(li)
+      })
   });
 });
+})
